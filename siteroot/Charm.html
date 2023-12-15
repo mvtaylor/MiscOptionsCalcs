@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    	<title>Charm value</title>
+    	<script type="text/javascript"
+		src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js">
+	</script>
+    	<script type="text/javascript"
+        	src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js">
+    	</script>
+	<style>
+		div.textboxes div {
+			float: left;
+		}
+		div.textboxes div p {
+			text-align: center;
+		}
+		div.outputdiv {
+			clear:  both;
+			display: block;
+			padding-top: 50px;
+		}
+	</style>
+</head>
+<body onload="brython(1)">
+	<h1>Calculation of Charm</h1>
+    	<div class="textboxes">
+		<div>
+			<p class="boxheader">Stock price</p>
+			<input id="Svar" type="text" />
+		</div>
+		<div>
+			<p class="boxheader">Expiration date</p>
+			<input id="ExpirationDate" type="text" placeholder="m/d/y" />
+		</div>
+		<div>
+			<p class="boxheader">Strike Price</p>
+			<input id="Kvar" type="text" />
+		</div>
+		<div>
+			<p class="boxheader">Risk-free interest rate</p>
+			<input id="rvar" type="text" placeholder="4.58" />
+		</div>
+		<div>
+			<p class="boxheader">Volatility</p>
+			<input id="sigmavar" type="text" />
+		</div>
+	</div>
+	<div class="outputdiv">
+		<input id="doitbutton" type="button" value="Get charm" />
+		<h2 id="annualcharm"></h2>
+		<h2 id="dailycharm"></h2>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("input#doitbutton").click(function () {
+				let stockprice = $("#Svar").val();
+				let expdate = $("#ExpirationDate").val();
+				let strikeprice = $("#Kvar").val();
+				let interest_r = $("#rvar").val();
+				let vol = $("#sigmavar").val();
+				
+				let baseurl = "/script/charmcalc.py?S=${stockprice}&date=${expdate}&K=${strikeprice}&r=${interest_r}&sigma=${vol}";
+				let newurl = baseurl.replace("${stockprice}", stockprice).replace("${expdate}", expdate).replace("${strikeprice}", strikeprice).replace("${interest_r}", interest_r).replace("${vol}", vol);
+				//alert(newurl)
+				$.getJSON(newurl, function(data) {
+					//alert(data);
+					let annualcharmText = data["Charm_Annual"];
+					let dailycharmText = data["Charm_Daily"];
+					$("#annualcharm").text("Annual: " + annualcharmText);
+					$("#dailycharm").text("Daily: " + dailycharmText);
+				});
+			});
+
+		});
+		//at some point fix the placement of the submit button
+	</script>
+	</body>
+</html>

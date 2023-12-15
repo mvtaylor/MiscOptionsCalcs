@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    	<title>Vanna value</title>
+	<style>
+		div.textboxes div {
+			float: left;
+		}
+		div.textboxes div p {
+			text-align: center;
+		}
+		div.outputdiv {
+			clear:  both;
+			display: block;
+			padding-top: 50px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Calculation of Vanna</h1>
+    	<div class="textboxes">
+		<div>
+			<p class="boxheader">Delta value</p>
+			<input id="Deltaval" type="text" />
+		</div>
+		<div>
+			<p class="boxheader">Expiration date</p>
+			<input id="ExpirationDate" type="text" placeholder="m/d/yyyy" />
+		</div>
+		<div>
+			<p class="boxheader">Volatility</p>
+			<input id="sigmavar" type="text" />
+		</div>
+	</div>
+	<div class="outputdiv">
+		<input id="doitbutton" type="button" value="Get Vanna" />
+		<h2 id="VannaVal"></h2>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("input#doitbutton").click(function () {
+				let deltavalue = $("#Deltaval").val();
+				let expdate = $("#ExpirationDate").val();
+				let vol = $("#sigmavar").val();
+				
+				let baseurl = "/script/vannacalc.py?Delta=${deltavalue}&date=${expdate}&sigma=${vol}";
+				let newurl = baseurl.replace("${deltavalue}", deltavalue).replace("${expdate}", expdate).replace("${vol}", vol);
+				//alert(newurl)
+				$.getJSON(newurl, function(data) {
+					//alert(data);
+					let vannaPer1Text = data["Vanna_Per1"];
+					let vannaPerPercentText = data["Vanna_PerPercent"];
+					//let displaystr = "Vanna: {vperpercent} (with changes in vol in percent)";
+					$("#VannaVal").text("Vanna: " + vannaPerPercentText + " (with changes of vol in percent)");
+				});
+			});
+
+		});
+		//at some point fix the placement of the submit button
+	</script>
+	</body>
+</html>

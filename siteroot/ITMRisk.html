@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    	<title>ITM Risk</title>
+	<style>
+		div.textboxes div {
+			float: left;
+		}
+		div.textboxes div p {
+			text-align: center;
+		}
+		div.outputdiv {
+			clear:  both;
+			display: block;
+			padding-top: 50px;
+		}
+	</style>
+</head>
+<body>
+	<h1>ITM Risk</h1>
+    	<div class="textboxes">
+		<div>
+			<p class="boxheader">Delta value</p>
+			<input id="deltavar" type="text" placeholder="0.20" />
+		</div>
+		<div>
+			<p class="boxheader">Expiration date</p>
+			<input id="ExpirationDate" type="text" placeholder="mm/dd/yy" />
+		</div>
+		<div>
+			<p class="boxheader">Volatility</p>
+			<input id="sigmavar" type="text" placeholder="55 (in percent)" />
+		</div>
+	</div>
+	<div class="outputdiv">
+		<input id="doitbutton" type="button" value="Get probability to expire in-the-money" />
+		<h2 id="resprob"></h2>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("input#doitbutton").click(function () {
+				let delta = $("#deltavar").val();
+				let expdate = $("#ExpirationDate").val();
+				let vol = $("#sigmavar").val();
+				
+				let baseurl = "/script/ITMrisk.py?Delta=${delta}&date=${expdate}&sigma=${vol}";
+				let newurl = baseurl.replace("${delta}", delta).replace("${expdate}", expdate).replace("${vol}", vol);
+				//alert(newurl);
+				//console.log(newurl);
+				$.getJSON(newurl, function(data) {
+					//alert(data);
+					//console.log(data);
+					let ITMRiskPercent = data["ITMRiskPercent"];
+					$("#resprob").text("Chance to expire in the money: " + ITMRiskPercent);
+				});
+			});
+
+		});
+		//at some point fix the placement of the submit button
+	</script>
+	</body>
+</html>

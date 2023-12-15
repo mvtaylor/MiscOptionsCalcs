@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+	<!--
+	<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+	<script>
+  		function addDarkmodeWidget() {
+    		const options = {
+				backgroundColor: '#202124',
+				mixColor: '#202124'
+			}
+			
+			const darkmode = new Darkmode(options);
+			darkmode.showWidget();
+  		}
+  		window.addEventListener('load', addDarkmodeWidget);
+	</script>
+	-->
+	<title>Trade Info</title>
+	<!--
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js">
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js">
+	</script>
+	-->
+	<style>
+		div.sectiondiv {
+			text-align: center;
+		}
+		h1#PageTitle {
+			text-align: center;
+		}
+		h2.sectionheader {
+			text-align: center;
+			text-decoration: underline;
+		}
+		p.descriptionpara {
+			font-size: 1.33em;
+			font-style: italic;
+		}
+		div.forwardsubdiv p {
+			display: inline;
+		}
+
+		body {
+			color: #dddbd8;
+			background: #202124;
+		}
+		/*
+		div.textboxes div {
+			float: left;
+		}
+
+		div.textboxes div p {
+			text-align: center;
+		}
+
+		div.outputdiv {
+			clear: both;
+			display: block;
+			padding-top: 50px;
+		}
+		*/
+	</style>
+</head>
+
+<body>
+	<h1 id="PageTitle">Trade Info</h1>
+	<div id="ForwardDates" class="sectiondiv">
+		<h2 class="sectionheader">Forward Dates</h2>
+		<div class="forwardsubdiv">
+			<p class="descriptionpara">Today: </p>
+			<p id="todaypara" class="datepara"></p>
+		</div>
+		<div class="forwardsubdiv">
+			<p class="descriptionpara">2 weeks out: </p>
+			<p id="2wkpara" class="datepara"></p>
+		</div>
+		<div class="forwardsubdiv">
+			<p class="descriptionpara">3 weeks out: </p>
+			<p id="3wkpara" class="datepara"></p>
+		</div>
+		<div class="forwardsubdiv">
+			<p class="descriptionpara">6 weeks out: </p>
+			<p id="6wkpara" class="datepara"></p>
+		</div>
+	</div>
+	<div id="PriceMargins" class="sectiondiv">
+		<h2 class="sectionheader">Price Margins</h2>
+	</div>
+	<div id="Events" class="sectiondiv">
+		<h2 class="sectionheader">Economic Events</h2>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			const todayobj = new Date();
+			const todayunix = todayobj.valueOf();
+			const weekms = 604800000;
+
+			var twowk = new Date(todayunix + 2 * weekms);
+			var threewk = new Date(todayunix + 3 * weekms);
+			var sixwk = new Date(todayunix + 6 * weekms);
+
+			var todaystr = formatdate(todayobj);
+			var twostr = formatdate(twowk);
+			var threestr = formatdate(threewk);
+			var sixstr = formatdate(sixwk);
+
+			$("p#todaypara").text(todaystr);
+			$("p#2wkpara").text(twostr);
+			$("p#3wkpara").text(threestr);
+			$("p#6wkpara").text(sixstr);
+		});
+		function formatstr(str, fmtarr)
+		{
+			let tempstr = str;
+			let flagmatches = tempstr.match(/(%s)|(%d)/g);
+			if (flagmatches.length !== fmtarr.length)
+			{
+				return null;
+			}
+			for (let i = 0; i < fmtarr.length; i++)
+			{
+				let thearg = fmtarr[i];
+				switch (typeof(thearg))
+				{
+					case "number":
+						tempstr = tempstr.replace("%d", String(thearg));
+						break;
+					case "string":
+						tempstr = tempstr.replace("%s", thearg);
+						break;
+					default:
+						return "Exception...";
+				}
+			}
+			return tempstr;
+		}
+		function formatdate(dateobj)
+		{
+			const weekdict = { 0: "Sun", 1: "Mon", 2: "Tues", 3: "Wed", 4: "Thurs", 5: "Fri", 6: "Sat" };
+			return formatstr("%s %d/%d (%d)", [weekdict[dateobj.getDay()], dateobj.getMonth() + 1, dateobj.getDate(), dateobj.getFullYear()]);
+		}
+		//at some point fix the placement of the submit button
+	</script>
+</body>
+
+</html>
